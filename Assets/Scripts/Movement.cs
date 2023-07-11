@@ -7,11 +7,15 @@ public class Movement : MonoBehaviour
     Vector3 movement;
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float rotationSpeed = 720f;
-    [SerializeField] private Animator animator;
+    private AudioSource source;
+    [SerializeField] private AudioClip movementSound;
+
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -25,7 +29,7 @@ public class Movement : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        movement = new Vector3(horizontal, 0f, vertical);
+        movement = new Vector3(horizontal, 0f, vertical) * movementSpeed * Time.deltaTime;
         movement.Normalize();
 
         transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
@@ -36,10 +40,21 @@ public class Movement : MonoBehaviour
             Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+
+            if (!source.isPlaying)
+            {
+                source.clip = movementSound;
+                source.Play();
+            }
         }
         else
         {
             animator.SetBool("Running", false);
+
+            if (source.isPlaying)
+            {
+                source.Stop();
+            }
         }
     }
 
