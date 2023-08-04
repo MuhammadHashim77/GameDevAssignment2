@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour
 
         if(movement != Vector3.zero)
         {
-            animator.SetBool("Running", true);
+            animator.SetBool("Walk", true);
             Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
@@ -49,12 +49,41 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            animator.SetBool("Running", false);
+            animator.SetBool("Walk", false);
 
             if (source.isPlaying)
             {
                 source.Stop();
             }
+        }
+    }
+
+    private void Animation()
+    {
+        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("Running", true);
+        }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            animator.SetBool("Jump", true);
+        }
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space))
+        {
+            animator.SetBool("LongJump", true);
+        }
+        if (Input.GetKey(KeyCode.C))
+        {
+            animator.SetBool("Crouch", true);
+        }
+
+        if (Input.GetKey(KeyCode.M))
+        {
+            animator.SetBool("Dance", true);
+        }
+        else
+        {
+            animator.SetBool("Dance", false);
         }
     }
 
